@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>FREE FIRE ACCOUNT INFO CHECKER | Kavindu X Ishan</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none; /* cleaner touch experience */
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+      font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* animated particles / grid effect */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* main glassmorphic container */
+    .app-container {
+      width: 100%;
+      max-width: 560px;
+      background: rgba(15, 25, 45, 0.55);
+      backdrop-filter: blur(16px);
+      border-radius: 3rem;
+      padding: 1.8rem 1.6rem 2.2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      z-index: 10;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      animation: floatGlow 6s infinite ease-in-out;
+    }
+
+    /* welcome overlay */
+    .welcome-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000dd;
+      backdrop-filter: blur(12px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: opacity;
+    }
+
+    .welcome-card {
+      text-align: center;
+      background: rgba(0, 10, 25, 0.85);
+      backdrop-filter: blur(20px);
+      padding: 2.5rem 2rem;
+      border-radius: 3rem;
+      width: 85%;
+      max-width: 440px;
+      border: 1px solid #0ff;
+      box-shadow: 0 0 35px rgba(0, 255, 255, 0.3);
+      animation: fadeSlideUp 0.7s ease-out;
+    }
+
+    .welcome-card h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, #aaffff, #00ccff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.7rem;
+      letter-spacing: -0.5px;
+    }
+
+    .welcome-card p {
+      color: #bbd9ff;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .letsgo-btn {
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      border: none;
+      padding: 14px 32px;
+      font-weight: 700;
+      font-size: 1.3rem;
+      border-radius: 60px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 114, 255, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+
+    .letsgo-btn:active {
+      transform: scale(0.96);
+      box-shadow: 0 4px 12px rgba(0, 114, 255, 0.6);
+    }
+
+    /* hidden until welcome dismissed */
+    .main-content {
+      transition: opacity 0.4s;
+    }
+
+    /* header & dev credit */
+    .brand {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .brand h2 {
+      font-size: 1.7rem;
+      background: linear-gradient(120deg, #E0F2FE, #00e0ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      font-weight: 700;
+    }
+
+    .dev-credit {
+      font-size: 0.75rem;
+      text-align: center;
+      color: #88aaff;
+      letter-spacing: 0.5px;
+      margin-top: 5px;
+    }
+
+    /* input group */
+    .input-group {
+      display: flex;
+      gap: 12px;
+      margin: 20px 0 24px;
+      flex-wrap: wrap;
+    }
+
+    .uid-input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #2affb6;
+      border-radius: 60px;
+      padding: 14px 20px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s;
+      font-family: monospace;
+    }
+
+    .uid-input:focus {
+      border-color: #0ff;
+      box-shadow: 0 0 12px #0ff6;
+    }
+
+    .check-btn {
+      background: #1a2a44;
+      border: 1px solid #0ff;
+      border-radius: 60px;
+      padding: 0 28px;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #bdf2ff;
+      cursor: pointer;
+      transition: 0.2s;
+      backdrop-filter: blur(4px);
+    }
+
+    .check-btn:active {
+      transform: scale(0.96);
+      background: #0ff2a;
+    }
+
+    /* stats card */
+    .stats-card {
+      margin-top: 20px;
+      background: rgba(8, 18, 28, 0.7);
+      border-radius: 2rem;
+      padding: 1.2rem 1.5rem;
+      border-left: 6px solid #0ff;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s;
+      animation: fadeGlow 0.5s ease;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.7rem 0;
+      border-bottom: 1px dashed rgba(0, 255, 255, 0.2);
+      font-size: 0.95rem;
+    }
+
+    .stat-label {
+      font-weight: 600;
+      color: #9bc2ff;
+      letter-spacing: 0.3px;
+    }
+
+    .stat-value {
+      font-weight: 500;
+      color: #f0f9ff;
+      text-align: right;
+      word-break: break-word;
+      max-width: 60%;
+    }
+
+    .nickname {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(145deg, #FFD966, #FFA500);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 6px #ffb347;
+    }
+
+    .error-message {
+      background: rgba(255, 50, 50, 0.2);
+      border-left: 5px solid #ff5555;
+      padding: 1rem;
+      border-radius: 1.2rem;
+      color: #ffb4b4;
+      margin-top: 1rem;
+    }
+
+    .loader {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 255, 255, 0.2);
+      border-top: 4px solid cyan;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes floatGlow {
+      0% { transform: translateY(0px); box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,255,255,0.2); }
+      50% { transform: translateY(-6px); box-shadow: 0 30px 45px rgba(0,0,0,0.6), 0 0 0 2px rgba(0,255,255,0.4); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeGlow {
+      0% { opacity: 0; transform: scale(0.96); filter: blur(2px);}
+      100% { opacity: 1; transform: scale(1); filter: blur(0);}
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 0.7rem;
+      color: #6f8fbb;
+    }
+
+    button, .letsgo-btn {
+      cursor: pointer;
+    }
+
+    @media (max-width: 550px) {
+      .app-container {
+        padding: 1.2rem;
+      }
+      .stat-row {
+        font-size: 0.85rem;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .stat-value {
+        max-width: 100%;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- WELCOME SCREEN -->
+  <div id="welcomeScreen" class="welcome-overlay">
+    <div class="welcome-card">
+      <h1>🔥 FF ACCOUNT CHECKER 🔥</h1>
+      <p>Powerful Stalk Tool • Real-time stats • Live Data</p>
+      <button id="letsGoBtn" class="letsgo-btn">🎮 LETS GO 🎮</button>
+      <div style="margin-top: 22px; font-size: 12px; color: #6c8fc0;">Developed by Kavindu X Ishan</div>
+    </div>
+  </div>
+
+  <div id="mainApp" class="app-container" style="display: none;">
+    <div class="brand">
+      <h2>ꜰʀᴇᴇ ꜰɪʀᴇ ɪɴꜰᴏ ᴄʜᴇᴄᴋᴇʀ</h2>
+      <div class="dev-credit">✨ Kavindu X Ishan ✨</div>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="uidInput" class="uid-input" placeholder="Enter Free Fire UID ... e.g., 3270436090" autocomplete="off">
+      <button id="checkBtn" class="check-btn">🔍 CHECK</button>
+    </div>
+
+    <div id="resultArea">
+      <!-- dynamic content -->
+      <div class="stats-card" style="text-align: center; color: #bedcff;">
+        ✨ Enter a valid UID to reveal account details ✨
+      </div>
+    </div>
+    <footer>⚡ realtime via api.soonex.biz.id | stats may vary</footer>
+  </div>
+
+  <audio id="bgMusic" loop preload="auto">
+    <source src="https://files.catbox.moe/m8zzck.mpeg" type="audio/mpeg">
+  </audio>
+
+  <script>
+    (function() {
+      // ---------- DOM Elements ----------
+      const welcomeDiv = document.getElementById('welcomeScreen');
+      const mainAppDiv = document.getElementById('mainApp');
+      const letsGoButton = document.getElementById('letsGoBtn');
+      const checkButton = document.getElementById('checkBtn');
+      const uidField = document.getElementById('uidInput');
+      const resultContainer = document.getElementById('resultArea');
+      const audioEl = document.getElementById('bgMusic');
+
+      // music autoplay flag (only after user interaction)
+      let musicStarted = false;
+      let welcomeDismissed = false;
+
+      // function to start music globally (first touch/click)
+      function tryStartMusic() {
+        if (!musicStarted && audioEl) {
+          audioEl.play().then(() => {
+            musicStarted = true;
+            console.log('🎵 background music started');
+          }).catch(e => {
+            console.warn('autoplay blocked, waiting for next interaction');
+          });
+        }
+      }
+
+      // attach global listeners for music start (only once)
+      function attachMusicTrigger() {
+        const events = ['click', 'touchstart'];
+        const handler = () => {
+          tryStartMusic();
+          // remove after started to avoid overhead
+          if (musicStarted) {
+            events.forEach(ev => document.removeEventListener(ev, handler));
+          }
+        };
+        events.forEach(ev => document.addEventListener(ev, handler));
+      }
+
+      // Show main content and remove welcome with animation
+      function dismissWelcome() {
+        if (welcomeDismissed) return;
+        welcomeDismissed = true;
+        welcomeDiv.style.opacity = '0';
+        setTimeout(() => {
+          welcomeDiv.style.display = 'none';
+          mainAppDiv.style.display = 'block';
+          // fade in animation on main app
+          mainAppDiv.style.animation = 'fadeSlideUp 0.5s ease';
+          // trigger music attempt because user clicked "LETS GO"
+          tryStartMusic();
+        }, 500);
+      }
+
+      // --- API CALL ---
+      async function fetchFreeFireInfo(uid) {
+        if (!uid || uid.trim() === "") {
+          showError("❌ Please enter a valid UID.");
+          return;
+        }
+        // show loader
+        resultContainer.innerHTML = `<div class="loader"><div class="spinner"></div><div style="color:#aaf; margin-left: 12px;">Fetching account data...</div></div>`;
+        const apiUrl = `https://api.soonex.biz.id/v1/stalk/ff?uid=${encodeURIComponent(uid)}`;
+        
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 12000);
+          const response = await fetch(apiUrl, { signal: controller.signal });
+          clearTimeout(timeoutId);
+          
+          if (!response.ok) {
+            throw new Error(`API responded with status ${response.status}`);
+          }
+          
+          const jsonData = await response.json();
+          console.log("API response:", jsonData);
+          // Normalize response: sometimes data could be inside 'data' field or top-level.
+          let profile = jsonData?.data || jsonData;
+          
+          // fallback if response wrapped
+          if (profile && (profile.nickname || profile.accountId)) {
+            renderStats(profile);
+          } else if (jsonData && (jsonData.nickname || jsonData.accountId)) {
+            renderStats(jsonData);
+          } else {
+            throw new Error("Invalid API response structure or UID not found.");
+          }
+        } catch (err) {
+          if (err.name === 'AbortError') {
+            showError("⏱️ Request timeout. Check UID or network.");
+          } else {
+            showError(`⚠️ Failed to fetch info: ${err.message || "UID invalid or server error"}`);
+          }
+        }
+      }
+
+      // RENDER BEAUTIFUL STATS CARD
+      function renderStats(data) {
+        // extract values with fallbacks
+        const nickname = data.nickname || "Unknown Survivor";
+        const accountId = data.accountId || data.uid || "—";
+        const region = data.region || "—";
+        const level = data.level ?? "—";
+        const exp = data.exp ?? "—";
+        const liked = data.liked ?? data.likes ?? "—";
+        const brRank = data.brRank ?? data.br_rank ?? "—";
+        const csRank = data.csRank ?? data.cs_rank ?? "—";
+        const createAt = data.createAt || data.created_at || data.accountCreateTime || "—";
+        const lastLogin = data.lastLogin || data.last_login || "—";
+        const clan = data.clan || data.guildName || "—";
+        const signature = data.signature || data.bio || "🔥 Free Fire Warrior 🔥";
+        
+        resultContainer.innerHTML = `
+          <div class="stats-card">
+            <div class="stat-row"><span class="stat-label">🎮 NICKNAME</span><span class="stat-value nickname">${escapeHtml(nickname)}</span></div>
+            <div class="stat-row"><span class="stat-label">🆔 ACCOUNT ID</span><span class="stat-value">${escapeHtml(accountId)}</span></div>
+            <div class="stat-row"><span class="stat-label">🌍 REGION</span><span class="stat-value">${escapeHtml(region)}</span></div>
+            <div class="stat-row"><span class="stat-label">📊 LEVEL</span><span class="stat-value">${escapeHtml(level)}</span></div>
+            <div class="stat-row"><span class="stat-label">✨ EXPERIENCE (EXP)</span><span class="stat-value">${escapeHtml(exp)}</span></div>
+            <div class="stat-row"><span class="stat-label">❤️ LIKES RECEIVED</span><span class="stat-value">${escapeHtml(liked)}</span></div>
+            <div class="stat-row"><span class="stat-label">🏆 BR RANK</span><span class="stat-value">${escapeHtml(brRank)}</span></div>
+            <div class="stat-row"><span class="stat-label">⚡ CS RANK</span><span class="stat-value">${escapeHtml(csRank)}</span></div>
+            <div class="stat-row"><span class="stat-label">📅 CREATED AT</span><span class="stat-value">${escapeHtml(createAt)}</span></div>
+            <div class="stat-row"><span class="stat-label">🕒 LAST LOGIN</span><span class="stat-value">${escapeHtml(lastLogin)}</span></div>
+            <div class="stat-row"><span class="stat-label">🤝 CLAN / GUILD</span><span class="stat-value">${escapeHtml(clan)}</span></div>
+            <div class="stat-row"><span class="stat-label">✍️ SIGNATURE</span><span class="stat-value">${escapeHtml(signature)}</span></div>
+          </div>
+          <div style="margin-top: 8px; font-size: 12px; text-align: center; color:#5f8ab6;">✓ data fetched successfully</div>
+        `;
+      }
+
+      function showError(msg) {
+        resultContainer.innerHTML = `<div class="error-message">⚠️ ${escapeHtml(msg)}</div>`;
+      }
+
+      // simple XSS protection
+      function escapeHtml(str) {
+        if (str === undefined || str === null) return "—";
+        return String(str).replace(/[&<>]/g, function(m) {
+          if (m === '&') return '&amp;';
+          if (m === '<') return '&lt;';
+          if (m === '>') return '&gt;';
+          return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+          return c;
+        });
+      }
+
+      // Event listeners for check action
+      function handleCheck() {
+        const uid = uidField.value.trim();
+        if (uid === "") {
+          showError("🔴 Please enter a Free Fire UID (numeric ID).");
+          return;
+        }
+        fetchFreeFireInfo(uid);
+      }
+
+      // Press enter in input field
+      uidField.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleCheck();
+      });
+      
+      checkButton.addEventListener('click', handleCheck);
+      letsGoButton.addEventListener('click', dismissWelcome);
+      
+      // global: every touch/click after welcome will also fire music if not playing
+      attachMusicTrigger();
+      
+      // bonus: also try to play music when welcome is dismissed (already tryStartMusic)
+      // preload & ensure audio element is ready
+      audioEl.load();
+    })();
+  </script>
+</body>
+  </html>
